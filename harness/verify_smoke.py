@@ -1,13 +1,35 @@
 #!/usr/bin/env python3
+"""Require successful process, valid accounting and an exact deterministic answer."""
+from __future__ import annotations
+import argparse
 import json
-import sys
 from pathlib import Path
+import sys
 
-summary = json.loads(Path(sys.argv[1]).read_text())
-expected = Path(sys.argv[2]).read_text().strip()
-actual = (summary.get('answer') or '').strip()
-if actual != expected:
-    print(f'FAIL: expected {expected!r}, got {actual!r}', file=sys.stderr)
-    raise SystemExit(1)
-print(f'PASS: answer={actual}')
-print(f"events={summary.get('source_event_count', 0)} usage_events={len(summary.get('usage_events', []))}")
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('summary', type=Path)
+    parser.add_argument('expected', type=Path)
+    args = parser.parse_args()
+    try:
+        summary = json.loads(args.summary.read_text())
+        expected = args.expected.read_text().strip()
+    except (OSError, json.JSONDecodeError):
+        print('Unreadable smoke evidence or expected answer.', file=sys.stderr)
+        return 2
+    if not isinstance(summary, dict) or summary.get('schema') != 2:
+        print('Unqualified summary schema.', file=sys.stderr)
+        return 1
+    if summary.get('invocation_verified') is not True or summary.get('validation_errors'):
+        print('Invocation or usage evidence not verified.', file=sys.stderr)
+        return 1
+    if summary.get('answer') != expected:
+        print('Final answer did not match the deterministic fixture.', file=sys.stderr)
+        return 1
+    print('PASS: successful invocation, valid accounting and exact fixture answer.')
+    return 0
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

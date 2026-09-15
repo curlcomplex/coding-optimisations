@@ -7,8 +7,11 @@ on:
 
 jobs:
   probe:
-    runs-on: [self-hosted, macOS]
+    runs-on: [self-hosted, macOS, ARM64, curlop-bench]
     timeout-minutes: 5
     steps:
-      - run: echo runner-ok
-# bootstrap probe
+      - run: |
+          echo runner-ok
+          hostname
+          uname -a
+          sysctl -n machdep.cpu.brand_string

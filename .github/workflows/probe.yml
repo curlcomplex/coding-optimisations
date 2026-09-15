@@ -11,3 +11,4 @@ jobs:
     timeout-minutes: 5
     steps:
       - run: echo runner-ok
+# bootstrap probe

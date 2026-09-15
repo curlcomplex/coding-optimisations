@@ -1,0 +1,13 @@
+name: Probe self-hosted runner
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/probe.yml'
+
+jobs:
+  probe:
+    runs-on: [self-hosted, macOS]
+    timeout-minutes: 5
+    steps:
+      - run: echo runner-ok

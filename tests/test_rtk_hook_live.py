@@ -5,6 +5,7 @@ from pathlib import Path
 import sys
 import tempfile
 import types
+import tomllib
 import unittest
 from unittest.mock import patch
 
@@ -26,8 +27,9 @@ class LiveHookTests(unittest.TestCase):
                 'key':'/<session-flags>/config.toml:pre_tool_use:0:0','currentHash':'sha256:'+'a'*64}
     def test_trust_only_exact_reviewed_hook(self):
         flags=m.trusted_flags([self.hook()],'python hook.py',True)
-        self.assertEqual(len(flags),4)
-        self.assertIn('trusted_hash',flags[1]);self.assertTrue(flags[-1].endswith('enabled=true'))
+        self.assertEqual(len(flags),2)
+        state=tomllib.loads(flags[1])['hooks']['state']
+        self.assertEqual(state,{self.hook()['key']:{'trusted_hash':'sha256:'+'a'*64,'enabled':True}})
         self.assertNotIn('bypass',' '.join(flags))
     def test_refuse_other_source_or_ambiguous_hook(self):
         h=self.hook();h['source']='user'

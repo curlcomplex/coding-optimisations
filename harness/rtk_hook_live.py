@@ -75,7 +75,7 @@ def make_fixture(root, binary):
     hook.write_text('import json,sys,subprocess\nfrom pathlib import Path\n'
         +'data=sys.stdin.buffer.read(1000001)\nif len(data)>1000000:raise SystemExit(1)\n'
         +'r=subprocess.run('+repr([str(binary),'hook','codex'])+',input=data,capture_output=True,env='+repr(env)+',timeout=5)\n'
-        +'with Path('+repr(str(audit))+').open("a") as f:f.write(json.dumps({"input":json.loads(data),"stdout":r.stdout.decode(),"stderr":r.stderr.decode(),"exit":r.returncode})+"\n")\n'
+        +'with Path('+repr(str(audit))+').open("a") as f:f.write(json.dumps({"input":json.loads(data),"stdout":r.stdout.decode(),"stderr":r.stderr.decode(),"exit":r.returncode})+chr(10))\n'
         +'sys.stdout.buffer.write(r.stdout);sys.stderr.buffer.write(r.stderr);raise SystemExit(r.returncode)\n')
     return cwd,shim,hook,audit,marker+':0.000125:blocked',execution_marker
 

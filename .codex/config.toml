@@ -1,0 +1,5 @@
+# Repository-only baseline; never copy this setting into the user's global config.
+# Skills remain installed. Load only the skills explicitly needed by the task/role.
+# See docs/REPO-CONTEXT.md for capability checks, fixture scope and rollback.
+[skills]
+include_instructions = false

@@ -264,7 +264,7 @@ def main() -> int:
         report['recovery_config'] = {k:live.get(k,{}).get('mode') for k in ('tee','retriever')}
         config_file = Path(__file__).resolve().parents[1]/'.codex/config.toml'
         report['repo_skills_include_instructions'] = tomllib.loads(config_file.read_text())['skills']['include_instructions']
-        binary_dir = root/'candidate'; binary_dir.mkdir()
+        binary_dir = root/'candidate-bin'; binary_dir.mkdir()
         with urllib.request.urlopen(ASSET, timeout=40) as response:
             archive = response.read(10_000_001)
         if len(archive)>10_000_000:

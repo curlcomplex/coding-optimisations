@@ -24,7 +24,7 @@ PROMPT = '$rtk-hook-qualification Perform the qualification exactly as the skill
 def flags_for(command, cwd, path):
     return ['-c','forced_login_method="chatgpt"','-c','model_reasoning_effort="low"',
             '-c','skills.include_instructions=false','-c','features.hooks=true',
-            '-c','projects.'+json.dumps(str(cwd))+'.trust_level="trusted"',
+            '-c','projects={'+json.dumps(str(cwd))+'={trust_level="trusted"}}',
             '-c','shell_environment_policy.set.PATH='+json.dumps(path),
             '-c','hooks.PreToolUse=[{matcher="^Bash$",hooks=[{type="command",command='+json.dumps(command)+',timeout=8}]}]']
 
@@ -43,9 +43,9 @@ def trusted_flags(hooks, command, enabled):
     h=matches[0]
     if h.get('source')!='sessionFlags' or not re.fullmatch(r'sha256:[a-f0-9]{64}',h.get('currentHash','')):
         raise ValueError('unqualified hook source/hash')
-    key='hooks.state.'+json.dumps(h['key'])
-    return ['-c',key+'.trusted_hash='+json.dumps(h['currentHash']),
-            '-c',key+'.enabled='+str(enabled).lower()]
+    # Keep path-like hook keys in a TOML value; CLI dotted override paths do not unquote them.
+    value='{'+json.dumps(h['key'])+'={trusted_hash='+json.dumps(h['currentHash'])+',enabled='+str(enabled).lower()+'}}'
+    return ['-c','hooks.state='+value]
 
 def make_fixture(root, binary):
     cwd=root/'fixture';cwd.mkdir();rtkhome=root/'rtk-home';env=environment(rtkhome)

@@ -2,6 +2,10 @@
 
 Read README.md and docs/BENCHMARK-PROTOCOL.md. GitHub Issues are task authority; immutable commits, actual job results and inspected artifacts are execution evidence.
 
+## Repository-local context
+
+The automatic skill catalogue is suppressed only for this lab. Explicitly select/load the skills required by the task or role; do not restore the full catalogue or remove necessary delegation/review capabilities. Freeze the qualified local profile identically across A/B arms. See docs/REPO-CONTEXT.md for scope, verification and rollback; broad startup optimisation remains deferred in #9.
+
 ## Runner routing
 
 The owner's Mac is already a working GitHub Actions target through an established private controller. Read docs/RUNNER-ROUTING.md and issue #2 before dispatching work. Inspect private controller workflow/job metadata through the authorised GitHub connection; do not infer runner absence from this public repository's queue or from only Faust-expr's default hosted workflow.

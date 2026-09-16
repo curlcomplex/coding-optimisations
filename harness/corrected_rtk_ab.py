@@ -17,7 +17,7 @@ def snap(ps):return {str(p):digest(p.read_bytes()) if p.is_file() and not p.is_s
 def prot(c,e):return all((c/n).is_file() and digest((c/n).read_bytes())==v for n,v in e.items() if not n.startswith('src/'))
 def src(c):return {str(p.relative_to(c)):digest(p.read_bytes()) for p in sorted((c/'src').rglob('*')) if p.is_file()}
 def test(c,e,path,expected):
- t=time.monotonic();code,out,err=execute([sys.executable,'run_tests.py'],c,e,30);path.write_bytes(out+err);return {'passed':code==0 and prot(c,expected),'exit':code,'wall_seconds':round(time.monotonic()-t,3),'sha256':digest(out+err)}
+ t=time.monotonic();code,out,err=execute([sys.executable,'run_tests.py'],c,e,timeout=30);path.write_bytes(out+err);return {'passed':code==0 and prot(c,expected),'exit':code,'wall_seconds':round(time.monotonic()-t,3),'sha256':digest(out+err)}
 def setup(parent,kind,stable,hookbin,rtkcfg,env):
  c=parent/'fixture';expected=materialize(c,kind);(c/'AGENTS.md').write_text(AGENTS);expected['AGENTS.md']=digest((c/'AGENTS.md').read_bytes())
  if kind=='cpp':

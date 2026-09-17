@@ -1,5 +1,20 @@
-# Repository-only baseline; never copy this setting into the user's global config.
-# Skills remain installed. Load only the skills explicitly needed by the task/role.
-# See docs/REPO-CONTEXT.md for capability checks, fixture scope and rollback.
+# Repository-only shutdown configuration.
+# This benchmark repo is paused: expose no optional skills, apps, web search,
+# shell execution, or Serena MCP tooling here. Global/user configuration and
+# every other repository remain unchanged.
+
+web_search = "disabled"
+
 [skills]
 include_instructions = false
+
+[apps._default]
+enabled = false
+
+[features]
+shell_tool = false
+remote_plugin = false
+skill_mcp_dependency_install = false
+
+[mcp_servers.serena]
+enabled = false
